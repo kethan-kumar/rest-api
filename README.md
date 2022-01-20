@@ -23,8 +23,6 @@ An API microservice using spring boot to simulate user registration:
   - city name (resolved using ip-geolocation api)
 - The API is in OpenAPI specification 3.0.0
 - Project uses Maven to build and generated using Spring Initializer
-- Contains JUnit Tests
-
 
 ## Commands to run the project
 - Download the source code from git
