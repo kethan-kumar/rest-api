@@ -1,5 +1,6 @@
 package com.rest.demo.controller;
 
+import com.rest.demo.model.ErrorMessage;
 import com.rest.demo.model.GeolocationResponse;
 import com.rest.demo.model.RegistrationDetails;
 import com.rest.demo.model.RegistrationResponse;
@@ -20,14 +21,16 @@ import javax.validation.Valid;
 @Validated
 public class RegistrationController {
 
+    RestTemplate restTemplate;
+    ErrorMessage errorMessage;
     @Value("${api.host.baseurl}")
     private String externalAPI;
-    RestTemplate restTemplate;
-
     @Value("${api.host.country}")
     private String country;
     @Value("${message.welcome}")
     private String message;
+    @Value("${message.error}")
+    private String err;
 
     @Autowired
     public RegistrationController(RestTemplate restTemplate) {
@@ -45,8 +48,10 @@ public class RegistrationController {
             if (response != null && response.getCity() != null && response.getCountry().equalsIgnoreCase(country)) {
                 registrationResponse = new RegistrationResponse(newUser.getUsername(), response.getCity(), message);
             } else {
-                String json = "{\"Error:\" " + ":" + "\"User is not eligible to register. Invalid request.\"}";
-                return json;
+                errorMessage = new ErrorMessage();
+                errorMessage.setError("403 Forbidden");
+                errorMessage.setMessage(err);
+                return errorMessage;
             }
         } catch (Exception e){
             e.printStackTrace();
